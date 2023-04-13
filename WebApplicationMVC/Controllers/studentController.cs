@@ -6,6 +6,22 @@ namespace WebApplicationMVC.Controllers
 {
     public class studentController : Controller
     {
+        IConfiguration configuration;
+
+        public studentController(IConfiguration configuration)
+        {
+            this.configuration = configuration;
+        }
+
+        public void Configure(IApplicationBuilder app, Microsoft.AspNetCore.Hosting.IHostingEnvironment env)
+        {
+            if (env.IsEnvironment("Development"))
+            {
+                // code to be executed in development environment 
+
+            }
+        }
+
         public IActionResult Student()
         {
             return View();
@@ -16,9 +32,11 @@ namespace WebApplicationMVC.Controllers
         public IActionResult Index()
         {
             students = new List<studentModel>();
-            string connectionString = "Data Source=5CG9441HWP;Initial Catalog=CollegeSportsManagementSystem; Integrated Security = True; Encrypt=False";
+            string connectionString = configuration.GetConnectionString("CollegeSportsManagementSystem");
 
-            SqlConnection conn = new SqlConnection(connectionString);
+            SqlConnection conn = new SqlConnection();
+
+            conn.ConnectionString = connectionString;
 
             conn.Open();
             SqlCommand cmd = conn.CreateCommand();
